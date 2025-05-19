@@ -42,9 +42,23 @@ public class PostController {
         return "posts";
     }
 
-    private PostPageable getPostPageable(Integer pageNumber, Integer pageSize) {
-        Long count = postService.count();
-        return new PostPageable(pageNumber, pageSize, count);
+    @GetMapping("/{id}")
+    public String post(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("post", postService.findById(id));
+        return "post";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("post", postService.findById(id));
+        return "add-post";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable("id") Long id) {
+        postService.deleteById(id);
+        System.out.println("Post with id " + id + " successfully deleted.");
+        return "redirect:/posts";
     }
 
     @GetMapping("/images/{id}")
@@ -83,5 +97,34 @@ public class PostController {
         Post newPost = postService.savePost(post);
         System.out.println("New Post id: " + newPost.getId());
         return "redirect:/posts";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable("id") Long id,
+                         @RequestParam("image") MultipartFile image,
+                         @RequestParam("title") String title,
+                         @RequestParam("tags") String tags,
+                         @RequestParam("text") String text) throws IOException {
+        Post post = postService.findById(id);
+        if (post == null) {
+            throw new RuntimeException("Post with id " + id + " not found");
+        }
+
+        System.out.println("Multipart file length: " + image.getBytes().length);
+
+        System.out.println();
+        post.setTitle(title);
+        post.setText(text);
+        post.setTags(tags);
+        if (image.getBytes().length != 0) post.setImage(image.getBytes());
+
+        postService.updatePost(post);
+        System.out.println("Post with id " + id + "successfully updated.");
+        return "redirect:/posts";
+    }
+
+    private PostPageable getPostPageable(Integer pageNumber, Integer pageSize) {
+        Long count = postService.count();
+        return new PostPageable(pageNumber, pageSize, count);
     }
 }

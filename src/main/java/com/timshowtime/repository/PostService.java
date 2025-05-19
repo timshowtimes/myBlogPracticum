@@ -9,7 +9,10 @@ import java.util.List;
 @Repository
 public interface PostService {
     Post savePost(Post post);
+    Post updatePost(Post post);
+    void deleteById(Long id);
     List<Post> findAll(Pageable pageable, String tag);
+    Post findById(Long id);
     Long count();
     byte[] getImageByPostId(Long postId);
 }

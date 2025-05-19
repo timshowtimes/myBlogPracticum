@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
+    <meta charset="UTF-8">
     <title>Лента постов</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/posts.css}"/>
 </head>
 
 <body>
-    <form method="GET" action="/posts/add">
-        <button style="float:right;">ДОБАВИТЬ ПОСТ</button>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Flash<span class="blog-accent">Blog</span></span>
+        </div>
+        <h1>Лента постов</h1>
+        <form method="GET" action="/posts/add">
+            <button class="add-post-btn">Добавить пост</button>
+        </form>
+    </div>
+
+    <form class="search-section" method="GET">
+        <div class="search-group">
+            <label for="search">Найти по тегу:</label>
+            <input id="search" name="search" th:value="${search}"/>
+        </div>
+
+        <div class="search-group">
+            <label for="pageSize">Число постов на странице:</label>
+            <select id="pageSize" name="pageSize" onchange="this.form.submit()">
+                <option value="5" th:selected="${paging.pageSize()==5}">5</option>
+                <option value="10" th:selected="${paging.pageSize()==10}">10</option>
+                <option value="20" th:selected="${paging.pageSize()==20}">20</option>
+                <option value="50" th:selected="${paging.pageSize()==50}">50</option>
+                <option value="100" th:selected="${paging.pageSize()==100}">100</option>
+            </select>
+        </div>
     </form>
-    <table style="width:50%;margin-left:auto;margin-right:auto;">
-        <tr>
-            <td>
-                <form>
-                    <p>
-                        <label for="search">Найти по тегу: </label>
-                        <input id="search" style="width:300px;" name="search" th:value="${search}">
-                        <button name="action">&#128269;</button>
-                    </p>
-                    <p>
-                        <label for="pageSize">Число постов: </label>
-                        <select id="pageSize" name="pageSize" onchange="this.form.submit()">
-                            <option value="5" th:selected="${paging.pageSize()==5}">5</option>
-                            <option value="10" th:selected="${paging.pageSize()==10}">10</option>
-                            <option value="20" th:selected="${paging.pageSize()==20}">20</option>
-                            <option value="50" th:selected="${paging.pageSize()==50}">50</option>
-                            <option value="100" th:selected="${paging.pageSize()==100}">100</option>
-                        </select>
-                    </p>
-                    <p>
-                        <button th:if="${paging.hasPrevious()}" name="pageNumber" th:value="${paging.pageNumber()-1}">&lt;</button>
-                        <span th:text="${'Страница: '+ (paging.pageNumber() + 1)}"></span>
-                        <button th:if="${paging.hasNext()}" name="pageNumber" th:value="${paging.pageNumber()+1}">&gt;</button>
-                    </p>
-                </form>
-            </td>
-        </tr>
-        <tr th:each="post : ${posts}">
-            <td style="border-bottom:thin solid;">
-                <h2 th:text="${post.getTitle()}"></h2>
-                <p>
-                    <a th:href="${'/posts/'+post.getId()}">
-                        <img height="300" th:src="${'http://localhost:8080/posts/images/'+post.getId()}">
-                    </a>
-                </p>
-                <p th:text="${post.getTextPreview()}"></p>
-                <p>
-                    <span th:text="${'&#x1F44D; '+post.getLikesCount()}"></span>
-<!--                    <span th:text="${'&#x2709; '+post.getComments().size()}"></span>-->
-                </p>
-                <p>
-                    <span th:each="tag : ${post.getTags()}" th:text="${'#'+tag+' '}"></span>
-                </p>
-            </td>
-        </tr>
-    </table>
+
+    <div th:each="post : ${posts}" class="post">
+        <a th:href="@{'/posts/' + ${post.getId()}}" class="post-link">
+            <h2 th:text="${post.getTitle()}"></h2>
+        </a>
+        <img th:src="@{'http://localhost:8080/posts/images/' + ${post.getId()}}" alt="Post Image">
+        <p th:text="${post.getTextPreview()}"></p>
+        <span><i class="fa-solid fa-thumbs-up"></i> <span th:text="${post.getLikesCount()}"></span></span>
+        <div class="tags">
+            <span th:each="tag : ${post.getTags()}" th:text="'#' + ${tag} + ' '"></span>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <form method="GET">
+            <button th:if="${paging.hasPrevious()}" name="pageNumber" th:value="${paging.pageNumber()-1}">&lt;</button>
+            <span th:text="'Страница: ' + (${paging.pageNumber()} + 1)"></span>
+            <button th:if="${paging.hasNext()}" name="pageNumber" th:value="${paging.pageNumber()+1}">&gt;</button>
+        </form>
+    </div>
+</div>
 </body>
+</html>

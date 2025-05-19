@@ -1,0 +1,145 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f8fc;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2em;
+    margin-top: 1em;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #534ed5;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.back-link i {
+    margin-right: 6px;
+}
+
+.back-link:hover {
+    color: #9d52ff;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+    background: #eee;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.edit-btn:hover {
+    background: #d1d0f2;
+}
+
+.delete-btn:hover {
+    background: #f5c0c0;
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.like-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tags {
+    color: #534ed5;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.post-text p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.comment-title {
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comment {
+    background: #f2f2f8;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.comment-edit-btn,
+.comment-delete-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    color: #534ed5;
+}
+
+.comment-delete-btn:hover {
+    color: #ff6b6b;
+}
+
+.add-comment-form button {
+    margin-top: 16px;
+    background: linear-gradient(135deg, #534ed5, #9d52ff);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.add-comment-form button:hover {
+    background: linear-gradient(135deg, #473fd5, #853cff);
+}

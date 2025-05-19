@@ -1,0 +1,83 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f8fc;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #534ed5;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #534ed5;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.back-link i {
+    margin-right: 6px;
+}
+
+.back-link:hover {
+    color: #9d52ff;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.post-form label {
+    font-weight: 600;
+    color: #444;
+}
+
+.post-form textarea,
+.post-form input[type="file"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.submit-btn {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #534ed5, #9d52ff);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #473fd5, #853cff);
+}

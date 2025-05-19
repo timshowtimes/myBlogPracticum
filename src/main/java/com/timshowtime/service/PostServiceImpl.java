@@ -39,15 +39,39 @@ public class PostServiceImpl implements PostService {
             return ps;
         }, keyHolder);
 
+        return findById(getKey(keyHolder).longValue());
+    }
+
+    @Override
+    public Post updatePost(Post post) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = "UPDATE post SET title = ?, tags = ?, text = ?, image = ? WHERE id = ? RETURNING id";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, post.getTitle());
+            ps.setString(2, post.getTagsAsText());
+            ps.setString(3, post.getText());
+            ps.setBytes(4, post.getImage());
+            ps.setLong(5, post.getId());
+            return ps;
+        }, keyHolder);
+
+        return findById(getKey(keyHolder).longValue());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM post WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    private Number getKey(KeyHolder keyHolder) {
         Number key = keyHolder.getKey();
         if (key == null) {
             throw new RuntimeException("Failed to save post: id was not generated");
         }
-
-        return jdbcTemplate.queryForObject("SELECT * FROM post WHERE id = ?",
-                new BeanPropertyRowMapper<>(Post.class),
-                key
-        );
+        return key;
     }
 
     @Override
@@ -81,5 +105,11 @@ public class PostServiceImpl implements PostService {
                 new BeanPropertyRowMapper<>(Post.class),
                 params.toArray()
         );
+    }
+
+    @Override
+    public Post findById(Long id) {
+        String sql = "SELECT * FROM post WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Post.class), id);
     }
 }

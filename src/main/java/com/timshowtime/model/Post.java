@@ -1,27 +1,37 @@
 package com.timshowtime.model;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @Data
 @NoArgsConstructor
 public class Post {
     private long id;
-    @NotBlank(message = "Title should not be empty")
     private String title;
     private String tags;
     private String text;
     private byte[] image;
     private long likesCount;
     private List<Comment> comments;
+    private int nWord = 30;
 
     public String getTextPreview() {
-        return text;
+        if (text == null || text.isEmpty()) return "";
+        String[] words = text.split("\\s+");
+        if (words.length <= nWord) {
+            return text.trim();
+        }
+        return String.join(" ", Arrays.copyOfRange(words, 0, nWord)) + "...";
+    }
+
+    public String[] getTextParts() {
+        return text.split("\n");
     }
 
     public String getTagsAsText() {
