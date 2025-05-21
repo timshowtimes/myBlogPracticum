@@ -45,7 +45,10 @@
         </a>
         <img th:src="@{'http://localhost:8080/posts/images/' + ${post.getId()}}" alt="Post Image">
         <p th:text="${post.getTextPreview()}"></p>
-        <span><i class="fa-solid fa-thumbs-up"></i> <span th:text="${post.getLikesCount()}"></span></span>
+        <p class="post-stats">
+            <span><i class="fa-solid fa-thumbs-up"></i> <span th:text="${post.getLikesCount()}"></span></span>
+            <span><i class="fa-solid fa-comment"></i> <span th:text="${post.getCommentsCount()}"></span></span>
+        </p>
         <div class="tags">
             <span th:each="tag : ${post.getTags()}" th:text="'#' + ${tag} + ' '"></span>
         </div>

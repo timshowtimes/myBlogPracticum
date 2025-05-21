@@ -152,3 +152,7 @@ a:hover {
     color: #007bff;
     transform: translateX(2px);
 }
+
+.post-stats span {
+    margin-right: 5px;
+}

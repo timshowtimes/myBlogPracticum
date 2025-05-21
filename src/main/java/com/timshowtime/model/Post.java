@@ -1,15 +1,17 @@
 package com.timshowtime.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Post {
     private long id;
@@ -19,6 +21,7 @@ public class Post {
     private byte[] image;
     private long likesCount;
     private List<Comment> comments;
+    private long commentsCount;
     private int nWord = 30;
 
     public String getTextPreview() {

@@ -1,7 +1,9 @@
 package com.timshowtime.controller;
 
+import com.timshowtime.model.Comment;
 import com.timshowtime.model.Post;
 import com.timshowtime.model.PostPageable;
+import com.timshowtime.repository.CommentService;
 import com.timshowtime.repository.PostService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,12 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     @GetMapping
@@ -43,7 +47,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String post(@PathVariable("id") Long id, Model model) {
+    public String getPostPage(@PathVariable("id") Long id, Model model) {
         model.addAttribute("post", postService.findById(id));
         return "post";
     }
@@ -87,17 +91,64 @@ public class PostController {
                           @RequestParam("tags") String tags,
                           @RequestParam("text") String text) throws IOException {
 
-        Post post = new Post();
-        post.setTitle(title);
-        post.setText(text);
-        post.setTags(tags);
-        post.setText(text);
-        post.setImage(image.getBytes());
+        Post post = Post.builder()
+                .title(title)
+                .text(text)
+                .tags(tags)
+                .image(image.getBytes())
+                .build();
 
-        Post newPost = postService.savePost(post);
-        System.out.println("New Post id: " + newPost.getId());
+        postService.savePost(post);
+//        System.out.println("New Post id: " + newPost.getId());
         return "redirect:/posts";
     }
+
+    @PostMapping("/{id}/like")
+    public String addPostLike(@PathVariable("id") Long postId,
+                              @RequestParam("like") Boolean like) {
+        postService.setLike(postId, like);
+        System.out.println("Post with id " + postId + " successfully liked.");
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/{id}/comments")
+    public String addPostComment(@PathVariable("id") Long postId,
+                                 @RequestParam("text") String text) {
+        Comment comment = Comment.builder()
+                .text(text)
+                .postId(postId)
+                .build();
+        commentService.addComment(comment);
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/{id}/comments/{comId}")
+    public String updatePostComment(@PathVariable("id") Long postId,
+                                    @PathVariable("comId") Long comID,
+                                    @RequestParam("text") String text) {
+        Comment comment = commentService.findById(comID);
+
+        if (comment == null) {
+            throw new RuntimeException("Comment with id " + comID + " not found.");
+        }
+
+        comment.setText(text);
+        comment.setPostId(postId);
+        commentService.updateComment(comment);
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/{postId}/comments/{comId}/delete")
+    public String deletePostComment(@PathVariable("postId") Long postId,
+                                    @PathVariable("comId") Long comID) {
+        if (postId == null || comID == null) {
+            throw new RuntimeException("Comment with id " + comID + " or post with id " + postId + " not found.");
+        }
+
+        commentService.deleteComment(postId, comID);
+        return "redirect:/posts/" + postId;
+    }
+
 
     @PostMapping("/{id}")
     public String update(@PathVariable("id") Long id,
@@ -110,16 +161,13 @@ public class PostController {
             throw new RuntimeException("Post with id " + id + " not found");
         }
 
-        System.out.println("Multipart file length: " + image.getBytes().length);
-
-        System.out.println();
         post.setTitle(title);
         post.setText(text);
         post.setTags(tags);
         if (image.getBytes().length != 0) post.setImage(image.getBytes());
 
         postService.updatePost(post);
-        System.out.println("Post with id " + id + "successfully updated.");
+        System.out.println("Post with id " + id + " successfully updated.");
         return "redirect:/posts";
     }
 

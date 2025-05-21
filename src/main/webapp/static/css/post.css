@@ -110,7 +110,29 @@ body {
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
+}
+
+
+.comment-form {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.comment-actions {
+    margin-left: 2em;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.comment-text {
+    flex: 1;
 }
 
 .comment-edit-btn,
@@ -121,6 +143,38 @@ body {
     cursor: pointer;
     margin-left: 10px;
     color: #534ed5;
+}
+
+.submit-comment-button {
+    margin-top: 16px;
+    background: linear-gradient(135deg, #534ed5, #9d52ff);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.like-button,
+.dislike-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 8px;
+    color: #534ed5; /* или любой другой цвет */
+    transition: color 0.3s ease;
+}
+
+.like-button:hover {
+    color: #ec4747;
+}
+
+.dislike-button:hover {
+    color: #6f6c6c;
 }
 
 .comment-delete-btn:hover {
