@@ -30,11 +30,7 @@ public class PostServiceImplTest {
 
     @Test
     void savePost() {
-        Post post = new Post();
-        post.setTitle("My Title");
-        post.setTags("tag1 tag2");
-        post.setText("Some post content");
-        post.setImage(new byte[]{1, 2, 3, 4});
+        Post post = providePostObject();
 
         postService.savePost(post);
 
@@ -87,12 +83,7 @@ public class PostServiceImplTest {
 
     @Test
     void findAllWithTag() {
-
-        Post post = new Post();
-        post.setTitle("My Title");
-        post.setTags("tag1 tag2");
-        post.setText("Some post content");
-        post.setImage(new byte[]{1, 2, 3, 4});
+        Post post = providePostObject();
 
         when(jdbcTemplate.query(anyString(), any(BeanPropertyRowMapper.class), any(Object[].class)))
                 .thenReturn(Collections.singletonList(post));
@@ -102,5 +93,14 @@ public class PostServiceImplTest {
 
         assertEquals(1, postList.size());
         assertEquals(post, postList.get(0));
+    }
+
+    private Post providePostObject() {
+        Post post = new Post();
+        post.setTitle("My Title");
+        post.setTags("tag1 tag2");
+        post.setText("Some post content");
+        post.setImage(new byte[]{1, 2, 3, 4});
+        return post;
     }
 }
