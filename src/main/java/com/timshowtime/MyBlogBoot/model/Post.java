@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +21,12 @@ public class Post {
     private String text;
     private byte[] image;
     private long likesCount;
+    private LocalDateTime createdAt;
     private List<Comment> comments;
     private long commentsCount;
-    private int nWord = 30;
 
     public String getTextPreview() {
+        int nWord = 30;
         if (text == null || text.isEmpty()) return "";
         String[] words = text.split("\\s+");
         if (words.length <= nWord) {
