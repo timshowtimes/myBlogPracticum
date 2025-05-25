@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post == null} ? 'Создание поста' : 'Редактирование поста'"></title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/add-post.css}" />
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <a href="/posts" class="back-link"><i class="fa-solid fa-arrow-left"></i> На главную</a>
+        <h1 th:text="${post == null} ? 'Создание поста' : 'Редактирование поста'"></h1>
+    </div>
+
+    <form method="POST"
+          th:action="${post == null ? '/posts/upload' : '/posts/' + post.getId()}"
+          enctype="multipart/form-data"
+          class="post-form">
+
+        <label for="title">Название</label>
+        <textarea id="title" name="title" rows="2" th:text="${post == null ? '' : post.getTitle()}"></textarea>
+
+        <label for="image">Изображение</label>
+        <input id="image" type="file" name="image"/>
+        <img id="preview"
+             th:if="${post != null}"
+             th:src="@{'http://localhost:8080/posts/images/' + ${post.id}}"
+             alt="Превью изображения"
+             style="max-width: 100%; margin-top: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"/>
+
+        <label for="tags">Теги</label>
+        <textarea id="tags" name="tags" rows="2" th:text="${post == null ? '' : post.getTagsAsText()}"></textarea>
+
+        <label for="text">Текст</label>
+        <textarea id="text" name="text" rows="15" th:text="${post == null ? '' : post.getText()}"></textarea>
+
+        <button class="submit-btn" th:text="${post == null ? 'Сохранить' : 'Редактировать'}"></button>
+    </form>
+</div>
+<script>
+    document.getElementById('image').addEventListener('change', function (event) {
+        const preview = document.getElementById('preview');
+        const file = event.target.files[0];
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+            preview.src = '#';
+        }
+    });
+</script>
+</body>
+</html>

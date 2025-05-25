@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр поста</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/post.css}"/>
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <a href="/posts" class="back-link"><i class="fa-solid fa-arrow-left"></i> На главную</a>
+        <div class="action-buttons">
+            <form method="GET" th:action="@{'/posts/' + ${post.id} + '/edit'}">
+                <button class="edit-btn">Редактировать</button>
+            </form>
+            <form method="POST" th:action="@{'/posts/' + ${post.id} + '/delete'}">
+                <button class="delete-btn">Удалить</button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="post-title" th:text="${post.title}"></h2>
+    <img class="post-image" height="300" th:src="@{'http://localhost:8080/posts/images/' + ${post.id}}"/>
+
+    <form class="like-form" th:action="@{'/posts/' + ${post.id} + '/like'}" method="post">
+        <button name="like" value="true" class="like-button">
+            <i class="fa-solid fa-thumbs-up"></i>
+        </button>
+        <span id="likesCount" th:text="${post.likesCount}"></span>
+        <button name="like" value="false" class="dislike-button">
+            <i class="fa-solid fa-thumbs-down"></i>
+        </button>
+    </form>
+
+    <div class="tags">
+        <span th:each="tag : ${post.tags}" th:text="${'#' + tag + ' '}"></span>
+    </div>
+
+    <div class="post-text" th:each="textPart : ${post.textParts}">
+        <p th:text="${textPart}"></p>
+    </div>
+
+    <hr>
+    <h2 class="comment-title">Комментарии</h2>
+
+    <div class="comments">
+        <div class="comment" th:each="comment : ${post.comments}">
+            <form method="POST"
+                  th:action="@{'/posts/' + ${post.id} + '/comments/' + ${comment.id}}"
+                  th:id="'form' + ${comment.id}"
+                  class="comment-form">
+
+                <div class="comment-text" th:id="'commentText' + ${comment.id}">
+                    <span th:id="'comment' + ${comment.id}" th:text="${comment.text}"></span>
+                </div>
+
+                <div class="comment-actions">
+                    <button type="button"
+                            th:id="${comment.id}"
+                            class="comment-edit-btn"
+                            onclick="editComment(this)">
+                        &#9998;
+                    </button>
+                </div>
+            </form>
+
+            <form method="POST" th:action="@{'/posts/' + ${post.id} + '/comments/' + ${comment.id} + '/delete'}">
+                <button class="comment-delete-btn">&#10007;</button>
+            </form>
+        </div>
+    </div>
+
+    <form id="addCommentForm" class="add-comment-form" th:action="@{'/posts/' + ${post.id} + '/comments'}"
+          method="post">
+        <button id="addCommentButton" type="button" onclick="addComment()">Добавить комментарий</button>
+    </form>
+</div>
+
+<script>
+    function editComment(button) {
+        const id = button.id;
+        const form = document.getElementById("form" + id);
+        const commentSpan = document.getElementById("comment" + id);
+        const commentTextDiv = document.getElementById("commentText" + id);
+
+        const textarea = document.createElement("textarea");
+        textarea.name = "text";
+        textarea.rows = 3;
+        textarea.className = "comment-textarea";
+        textarea.style.width = "100%";
+        textarea.value = commentSpan.textContent;
+
+        textarea.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.key === "Enter") {
+                form.submit();
+            }
+        });
+
+        commentTextDiv.innerHTML = ""; // замена span на textarea
+        commentTextDiv.appendChild(textarea);
+
+        button.remove();
+
+        const submitButton = document.createElement("button");
+        submitButton.type = "submit";
+        submitButton.innerHTML = "&#10003;";
+        submitButton.className = "comment-submit-btn";
+
+        form.querySelector(".comment-actions").appendChild(submitButton);
+    }
+
+    function addComment() {
+        const button = document.getElementById("addCommentButton");
+        button.remove();
+
+        const form = document.getElementById("addCommentForm");
+
+        const newComment = document.createElement("textarea");
+        newComment.rows = 3;
+        newComment.name = "text";
+        newComment.style.width = "99%";
+        newComment.style.marginTop = "20px";
+
+        newComment.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.key === "Enter") {
+                form.submit();
+            }
+        });
+
+        form.appendChild(newComment);
+
+        const buttonWrapper = document.createElement("div");
+        buttonWrapper.style.display = "flex";
+        buttonWrapper.style.justifyContent = "flex-end";
+
+        const newButton = document.createElement("button");
+        newButton.innerHTML = "&#10003;";
+        newButton.classList.add("submit-comment-button");
+
+        buttonWrapper.appendChild(newButton);
+        form.appendChild(buttonWrapper);
+    }
+
+</script>
+</body>
+</html>
