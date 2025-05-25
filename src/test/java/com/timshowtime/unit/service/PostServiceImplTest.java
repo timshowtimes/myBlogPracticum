@@ -89,7 +89,6 @@ public class PostServiceImplTest {
                 .thenReturn(Collections.singletonList(post));
 
         List<Post> postList = postService.findAll(PageRequest.of(0, 5), "tag1");
-        System.out.println("postList: " + postList);
 
         assertEquals(1, postList.size());
         assertEquals(post, postList.get(0));
